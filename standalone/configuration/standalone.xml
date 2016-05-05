@@ -25,7 +25,6 @@
         <extension module="org.jboss.as.transactions"/>
         <extension module="org.jboss.as.web"/>
         <extension module="org.jboss.as.webservices"/>
-        <!-- <extension module="org.jboss.as.weld"/>-->
     </extensions>
 
     <management>
@@ -101,63 +100,53 @@
                         <password>sa</password>
                     </security>
                 </datasource>
-                <datasource jta="true" jndi-name="java:jboss/FantaFormazioneWebDatasource" pool-name="MySQLDSPool1" enabled="true" use-java-context="true" use-ccm="true">
-                    <connection-url>jdbc:mysql://localhost:3306/fanta_formazione</connection-url>
-                    <driver>mysql</driver>
-                    <pool>
-                        <prefill>false</prefill>
-                        <use-strict-min>false</use-strict-min>
-                        <flush-strategy>FailingConnectionOnly</flush-strategy>
-                    </pool>
+                <xa-datasource jndi-name="java:jboss/FantaFormazioneWebDatasource" pool-name="MySQLDSPool1">
+                    <xa-datasource-property name="ServerName">
+                        localhost
+                    </xa-datasource-property>
+                    <xa-datasource-property name="DatabaseName">
+                        fanta_formazione
+                    </xa-datasource-property>
+                    <driver>mysqlXA</driver>
                     <security>
                         <user-name>root</user-name>
                         <password>12345678</password>
                     </security>
                     <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker"/>
                         <validate-on-match>false</validate-on-match>
                         <background-validation>false</background-validation>
+                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter"/>
                     </validation>
-                </datasource>
-                <datasource jta="true" jndi-name="java:/ProvaSeam23FullDatasource" pool-name="MySQLDSPool2" enabled="true" use-java-context="true" use-ccm="true">
-                    <connection-url>jdbc:mysql://localhost:3306/fanta_formazione</connection-url>
-                    <driver>mysql</driver>
-                    <pool>
-                        <prefill>false</prefill>
-                        <use-strict-min>false</use-strict-min>
-                        <flush-strategy>FailingConnectionOnly</flush-strategy>
-                    </pool>
+                </xa-datasource>
+                <xa-datasource jndi-name="java:jboss/FantaFormazioneWebDatasource_Service" pool-name="MySQLDSPool2">
+                    <xa-datasource-property name="ServerName">
+                        localhost
+                    </xa-datasource-property>
+                    <xa-datasource-property name="DatabaseName">
+                        fanta_formazione_service
+                    </xa-datasource-property>
+                    <driver>mysqlXA</driver>
                     <security>
                         <user-name>root</user-name>
                         <password>12345678</password>
                     </security>
                     <validation>
+                        <valid-connection-checker class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLValidConnectionChecker"/>
                         <validate-on-match>false</validate-on-match>
                         <background-validation>false</background-validation>
+                        <exception-sorter class-name="org.jboss.jca.adapters.jdbc.extensions.mysql.MySQLExceptionSorter"/>
                     </validation>
-                </datasource>
-                <datasource jta="true" jndi-name="java:jboss/datasources/FantaFormazioneWebDatasource" pool-name="MySQLDSPool3" enabled="true" use-java-context="true" use-ccm="true">
-                    <connection-url>jdbc:mysql://localhost:3306/fanta_formazione</connection-url>
-                    <driver>mysql</driver>
-                    <pool>
-                        <prefill>false</prefill>
-                        <use-strict-min>false</use-strict-min>
-                        <flush-strategy>FailingConnectionOnly</flush-strategy>
-                    </pool>
-                    <security>
-                        <user-name>root</user-name>
-                        <password>12345678</password>
-                    </security>
-                    <validation>
-                        <validate-on-match>false</validate-on-match>
-                        <background-validation>false</background-validation>
-                    </validation>
-                </datasource>
+                </xa-datasource>
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
                     </driver>
                     <driver name="mysql" module="com.mysql">
                         <xa-datasource-class>com.mysql.jdbc.Driver</xa-datasource-class>
+                    </driver>
+                    <driver name="mysqlXA" module="com.mysql">
+                        <xa-datasource-class>com.mysql.jdbc.jdbc2.optional.MysqlXADataSource</xa-datasource-class>
                     </driver>
                 </drivers>
             </datasources>
@@ -326,7 +315,6 @@
                 </pre-handler-chain>
             </endpoint-config>
         </subsystem>
-        <!-- <subsystem xmlns="urn:jboss:domain:weld:1.0"/>-->
     </profile>
 
     <interfaces>
